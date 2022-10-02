@@ -14,4 +14,4 @@ $(test_out)/sms.o : $(sms)/sms.cpp $(sms)/sms.hpp
 	g++ -c $(sms)/sms.cpp -o $(test_out)/sms.o
 
 $(test_out)/pub_sub_test : pub_sub_test.cpp $(test_out)/sms.o $(test_out)/publisher.o $(test_out)/subscriber.o
-	g++ -o $(test_out)/pub_sub_test pub_sub_test.cpp $(test_out)/sms.o $(test_out)/publisher.o $(test_out)/subscriber.o
+	g++ -o $(test_out)/pub_sub_test pub_sub_test.cpp $(test_out)/sms.o

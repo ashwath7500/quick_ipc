@@ -1,4 +1,4 @@
-#ifndef QUICK_IPC_PUBSUB_SUBSCRIBER_HPP_
+/*#ifndef QUICK_IPC_PUBSUB_SUBSCRIBER_HPP_
 #define QUICK_IPC_PUBSUB_SUBSCRIBER_HPP_
 
 #include <string>
@@ -17,3 +17,4 @@ namespace quick {
 } // namespace quick
 
 #endif
+*/

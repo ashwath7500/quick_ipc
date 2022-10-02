@@ -1,4 +1,4 @@
-#include <string>
+/*#include <string>
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <iostream>
@@ -13,7 +13,9 @@ namespace quick {
             smp.write(str, data);
         }
         publisher::~publisher() {
+            // std::cout<<"i control order";
             smp.detach(static_cast<void*> (str));
         }
     }
 }
+*/

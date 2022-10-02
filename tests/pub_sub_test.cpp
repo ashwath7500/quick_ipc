@@ -1,23 +1,24 @@
 #include <iostream>
 #include <thread>
 #include "../include/sms/sms.hpp"
-#include "../include/pubsub/publisher.hpp"
-#include "../include/pubsub/subscriber.hpp"
+
+quick::sms::sms<std::string> test_sms("test");
 
 void pub() {
-    quick::sms::sms test_pub_sms("test", 1024);
-    quick::pubsub::publisher p(test_pub_sms);
-    p.write("Hello world");
+    int i = 25;
+    while(i--)
+    test_sms.write("hello world\n");
 }
 
 void sub() {
-    quick::sms::sms test_sub_sms("test", 1024);
-    quick::pubsub::subscriber s(test_sub_sms);
-    std::cout<<s.read();
+    int i = 40;
+    while(i--)
+    std::cout<<test_sms.read();
 }
 
 int main() {
-    pub();
-    pub();
-    //sub();
+    std::thread thread2(sub);
+    std::thread thread1(pub);
+    thread1.join();
+    thread2.join();
 }
