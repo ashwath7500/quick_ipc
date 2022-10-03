@@ -1,23 +1,6 @@
 #include <bits/stdc++.h>
 #include "../include/sms/sms.hpp"
 
-quick::sms::sms<std::string, 50> test_sms("test");
-
-void pub() {
-    int i = 25;
-    while(i--)
-    test_sms.write("hello world\n");
-}
-
-void sub() {
-    int i = 40;
-    while(i--){
-        std::string get;
-        test_sms.read(get);
-        std::cout<<get;
-    }
-}
-
 void Test( std::string name )
 {
     const int NUM_PRODUCERS = 64;
@@ -80,8 +63,6 @@ void Test( std::string name )
 
     std::cout << name << " " << duration.count() << std::endl;
 
-    std::atomic_thread_fence( std::memory_order_acq_rel );
-
     bool result = true;
     for( int i = 0; i < NUM_PRODUCERS * NUM_ITERATIONS; ++i )
     {
@@ -95,9 +76,5 @@ void Test( std::string name )
 }
 
 int main() {
-    //std::thread thread2(sub);
-    //std::thread thread1(pub);
-    //thread1.join();
-    //thread2.join();
     Test("testit");
 }
