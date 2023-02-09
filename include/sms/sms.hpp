@@ -7,6 +7,7 @@
 #include <sys/shm.h>
 #include <iostream>
 #include <atomic>
+using namespace std;
 
 namespace quick {
     namespace sms {
@@ -24,6 +25,7 @@ namespace quick {
                 std::atomic<size_t> head;
                 std::atomic<size_t> tail;
                 std::atomic<bool> readable[size+1];
+                std::atomic<bool> used[size+1];
                 T array[size+1];
         };
         template<typename T, size_t size>
@@ -43,9 +45,11 @@ namespace quick {
             size_t next_tail = (current_tail+1)%(size+1);
             if (head.load(std::memory_order_acquire) != next_tail) {
                 if (tail.compare_exchange_weak(current_tail, next_tail, std::memory_order_acq_rel)) {
-                    bool readability = readable[current_tail];
-                    while (true) if (readable[current_tail].compare_exchange_weak(readability, true, std::memory_order_acq_rel)) {
+                    bool being_used = false;
+                    while (true) if (!readable[current_tail].load(memory_order_acquire)&&used[current_tail].compare_exchange_weak(being_used,true,memory_order_acq_rel)) {
                         array[current_tail] = ele;
+                        readable[current_tail].store(true,memory_order_release);
+                        used[current_tail].store(false,memory_order_release);
                         return true;
                     }
                 }
@@ -67,10 +71,12 @@ namespace quick {
             }
             size_t next_head = (current_head+1)%(size+1);
             if (head.compare_exchange_weak(current_head, next_head, std::memory_order_acq_rel)) {
-                bool readability = readable[current_head];
-                while (true) if (readable[current_head].compare_exchange_weak(readability, false, std::memory_order_acq_rel)) {   
+                bool being_used = false;
+                while (true) if (readable[current_head].load(memory_order_acquire)&&used[current_head].compare_exchange_weak(being_used,true,memory_order_acq_rel)) {   
                     T ret = array[current_head];
                     ele = ret;
+                    readable[current_head].store(false,memory_order_release);
+                    used[current_head].store(false,memory_order_release);
                     return true;
                 }
             }
